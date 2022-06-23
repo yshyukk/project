@@ -60,6 +60,11 @@ public class DAO {
 			oracleUrl = properties.getProperty("url");
 			connectedId = properties.getProperty("id");
 			connectedPwd = properties.getProperty("password");
+			
+			System.out.println(jdbcDriver);
+			System.out.println(oracleUrl);
+			System.out.println(connectedId);
+			System.out.println(connectedPwd);
 		}
 
 		// DB해제 메서드

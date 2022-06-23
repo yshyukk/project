@@ -24,12 +24,13 @@ public class MemberDAO extends DAO {
 	public void insert(Member member) {
 		try {
 			connect();
-			String sql = "INSERT INTO member " + "(id, password, name) " + " VALUES (?,?,?)";
+			String sql = "INSERT INTO member " + "(id, password, name, phnum ) " + " VALUES (?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getName());
-
+			pstmt.setInt(4, member.getPhnum());
+			
 			int result = pstmt.executeUpdate();
 
 		} catch (SQLException e) {

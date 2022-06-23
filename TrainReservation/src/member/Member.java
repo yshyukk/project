@@ -15,9 +15,7 @@ public class Member {
 	private int reservation;
 	@Override
 	public String toString() {
-		return "Member [id=" + id + ", password=" + password + ", name=" + name + ", phnum=" + phnum + ", reservation="
-				+ reservation + ", getId()=" + getId() + ", getPassword()=" + getPassword() + ", getName()=" + getName()
-				+ ", getPhnum()=" + getPhnum() + ", getReservation()=" + getReservation();
+		return "아이디 > " + id + "비밀번호 > " + password + "이름 > " + name + "전화번호 > " + phnum + "예약정보 > " + reservation;
 	}
 	
 	

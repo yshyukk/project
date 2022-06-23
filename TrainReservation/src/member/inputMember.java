@@ -2,6 +2,8 @@ package member;
 
 import java.util.Scanner;
 
+import javax.naming.ldap.ManageReferralControl;
+
 public class inputMember {
 
 	Scanner sc = new Scanner(System.in);
@@ -47,6 +49,22 @@ public class inputMember {
 	
 	//회원가입 -- StockManagement 참조
 	public void signUp() {
+		
+		Member member = new Member();
+		System.out.println("======<< 회원가입 >> ======");
+		
+		System.out.println("아이디 > ");
+	    member.setId(sc.nextLine());
+	    System.out.println("비밀번호 > ");
+	    member.setPassword(sc.nextLine());
+	    System.out.println("이름 > ");
+	    member.setName(sc.nextLine());
+	    System.out.println("연락처 > ");
+	    member.setPhnum(Integer.parseInt(sc.nextLine()));
+	    
+	    mDAO.insert(member);
+	    
+	    
 		
 	}
 }
