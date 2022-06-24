@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 import javax.naming.ldap.ManageReferralControl;
 
-public class inputMember {
+public class memberManagement {
 
 	Scanner sc = new Scanner(System.in);
 	
 	MemberDAO mDAO = MemberDAO.getInstance();
 	
-	public inputMember() {
+	public memberManagement() {
 		while (true) {
 			// 메뉴 출력
 			menuPrint();
@@ -54,7 +54,7 @@ public class inputMember {
 		System.out.println("======<< 회원가입 >> ======");
 		
 		System.out.println("아이디 > ");
-	    member.setId(sc.nextLine());
+	    member.setMemberId(sc.nextLine());
 	    System.out.println("비밀번호 > ");
 	    member.setPassword(sc.nextLine());
 	    System.out.println("이름 > ");

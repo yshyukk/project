@@ -28,7 +28,6 @@ public class DAO {
 		public DAO() {
 			dbConfig();
 		}
-
 		
 		public void connect() {
 			try {

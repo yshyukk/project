@@ -8,14 +8,14 @@ import lombok.Setter;
 
 public class Member {
 
-	private String id;
+	private String memberId;
 	private String password;
 	private String name;
 	private int phnum;
-	private int reservation;
+	private int reservationInfo;
 	@Override
 	public String toString() {
-		return "아이디 > " + id + "비밀번호 > " + password + "이름 > " + name + "전화번호 > " + phnum + "예약정보 > " + reservation;
+		return "아이디 > " + memberId + "비밀번호 > " + password + "이름 > " + name + "전화번호 > " + phnum + "예약정보 > " + reservationInfo;
 	}
 	
 	

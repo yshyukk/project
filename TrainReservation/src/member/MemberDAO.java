@@ -24,9 +24,9 @@ public class MemberDAO extends DAO {
 	public void insert(Member member) {
 		try {
 			connect();
-			String sql = "INSERT INTO member " + "(id, password, name, phnum ) " + " VALUES (?,?,?,?)";
+			String sql = "INSERT INTO member " + "(member_id, password, name, ph_num ) " + " VALUES (?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getId());
+			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getName());
 			pstmt.setInt(4, member.getPhnum());
@@ -44,13 +44,14 @@ public class MemberDAO extends DAO {
 		// 비밀번호, 휴대폰번호 변경
 		try {
 			connect();
-			String sql = "UPDATE member set password =?, phnum =? ";
+			String sql = "UPDATE member set password =?, ph_num =? WHERE member_id = '?" + "'";
 
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, member.getPassword());
 			pstmt.setInt(2, member.getPhnum());
-
+			pstmt.setString(3, member.getMemberId());
+			
 			int result = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -64,11 +65,11 @@ public class MemberDAO extends DAO {
 		// 회원정보삭제
 		try {
 			connect();
-			String sql = "DELETE member WHERE id =? ";
+			String sql = "DELETE member WHERE member_id =? ";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, member.getId());
+			pstmt.setString(1, member.getMemberId());;
 
 			int result = pstmt.executeUpdate();
 
@@ -91,11 +92,11 @@ public class MemberDAO extends DAO {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				Member signup = new Member();
-				signup.setId(rs.getString("id"));
+				signup.setMemberId(rs.getString("member_id"));
 				signup.setPassword(rs.getString("password"));
-				signup.setPhnum(rs.getInt("phNum"));
+				signup.setPhnum(rs.getInt("ph_Num"));
 				signup.setName(rs.getString("name"));
-				signup.setReservation(rs.getInt("reservation"));
+				signup.setReservationInfo(rs.getInt("reservation_info"));
 
 				list.add(signup);
 			}
@@ -108,28 +109,28 @@ public class MemberDAO extends DAO {
 	}
 
 	// 회원검색
-	public List<Member> searchId(String id) {
+	public List<Member> searchId(String memberId) {
 		
 		List<Member> list = new ArrayList<>();
 		// 1. 회원가입 이력이 있는지
 		
 		try {
 			connect();
-			String sql = "SELECT * FROM member WHERE id =?";
+			String sql = "SELECT * FROM member WHERE member_id =?";
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,id);
+			pstmt.setString(1,memberId);
 			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				Member member = new Member();
 				
-				member.setId(rs.getString("id"));
+				member.setMemberId(rs.getString("member_id"));
 				member.setPassword(rs.getString("password"));
 				member.setName(rs.getString("name"));
-				member.setPhnum(rs.getInt("phnum"));
-				member.setReservation(rs.getInt("reservation"));
+				member.setPhnum(rs.getInt("ph_num"));
+				member.setReservationInfo(rs.getInt("reservation_info"));
 				
 				list.add(member);
 					
