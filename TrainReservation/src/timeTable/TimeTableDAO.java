@@ -8,6 +8,7 @@ import common.DAO;
 
 public class TimeTableDAO extends DAO {
 	private static TimeTableDAO tableDao = null;
+	TimeTable table = new TimeTable();
 
 	TimeTableDAO() {
 	}
@@ -24,19 +25,19 @@ public class TimeTableDAO extends DAO {
 		try {
 			connect();
 			String sql = "INSERT INTO timetable "
-					+ "(timetable_id, train_id, departure_time, arrive_time, departure_location, arrive_location) "
-					+ " VALUES (?,?,?,?,?,?)";
+					+ "( timetable_id , train_id, departure_time, arrive_time, departure_location, arrive_location) "
+					+ " VALUES (timetable_seq.NEXTVAL,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, table.getTimeTableId());
-			pstmt.setInt(2, table.getTrainId());
-			pstmt.setDate(3, table.getDepartureTime());
-			pstmt.setDate(4, table.getArriveTime());
-			pstmt.setString(5, table.getDepartureLocation());
-			pstmt.setString(6, table.getArriveLocation());
-
+			//pstmt.setInt(1, table.getTimeTableId());
+			pstmt.setInt(1, table.getTrainId());
+			pstmt.setDate(2, table.getDepartureTime());
+			pstmt.setDate(3, table.getArriveTime());
+			pstmt.setString(4, table.getDepartureLocation());
+			pstmt.setString(5, table.getArriveLocation());
+			
 			int result = pstmt.executeUpdate();
-
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -46,6 +47,7 @@ public class TimeTableDAO extends DAO {
 
 	public void update(TimeTable table) {
 		// Timetable에 출발시간 도착시간 변경
+		
 		try {
 			connect();
 			String sql = "UPDATE timetable set departure_time =?, arrive_time =? WHERE timetable_id = ?";
@@ -75,7 +77,7 @@ public class TimeTableDAO extends DAO {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, table.getTimeTableId());
-			;
+			
 
 			int result = pstmt.executeUpdate();
 
@@ -84,6 +86,7 @@ public class TimeTableDAO extends DAO {
 		} finally {
 			disconnect();
 		}
+		
 	}
 
 	// 전체 TIMETABLE 조회
@@ -116,9 +119,9 @@ public class TimeTableDAO extends DAO {
 		return list;
 	}
 
-	// 단건조회
+	// 조건별 조회
 	// -1. 출발지_도착지 입력시 해당하는 열차정보
-	public List<TimeTable> searchLocation(TimeTable table) {
+	public List<TimeTable> searchLocationInfo() {
 
 		List<TimeTable> list = new ArrayList<>();
 		
@@ -155,18 +158,18 @@ public class TimeTableDAO extends DAO {
 	}
 	// -2.출발시간 입력하고 그 이후시간 열차정보 검색
 
-	public List<TimeTable> searchTime(TimeTable table) {
+	public List<TimeTable> searchTimeInfo(TimeTable table) {
 
 		List<TimeTable> list = new ArrayList<>();
 		
 
 		try {
 			connect();
-			String sql = "SELECT * FROM timetable WHERE dearture_time= ? AND arrive_time = ?";
+			String sql = "SELECT * FROM timetable WHERE dearture_time >= ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setDate(1, table.getDepartureTime());
-			pstmt.setDate(2, table.getArriveTime());
+			
 
 			rs = pstmt.executeQuery();
 
@@ -192,7 +195,7 @@ public class TimeTableDAO extends DAO {
 	}
 	//테이블id값으로 해당 정보 찾기
 	public TimeTable selectOne(int timeTableId) {
-		TimeTable table = null;
+		//TimeTable table = null;
 		try {
 			connect();
 			String sql = "SELECT * FROM timetable WHERE timetable_id = ?";

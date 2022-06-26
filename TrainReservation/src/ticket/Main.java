@@ -3,8 +3,10 @@ package ticket;
 public class Main {
 
 	public static void main(String[] args) {
-		new TicketManagement();
-
+		//new TicketManagement();
+		for (int i=1; i > 1 ; i++) {
+			
+		}
 	}
 
 }

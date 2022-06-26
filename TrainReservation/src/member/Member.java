@@ -7,17 +7,23 @@ import lombok.Setter;
 @Setter
 
 public class Member {
-
+	private int memberRole;
 	private String memberId;
 	private String password;
 	private String name;
 	private int phnum;
 	private int reservationInfo;
+
 	@Override
 	public String toString() {
-		return "아이디 > " + memberId + "비밀번호 > " + password + "이름 > " + name + "전화번호 > " + phnum + "예약정보 > " + reservationInfo;
+		String info = "";
+
+		if (memberRole == 0) {
+			info = "관리자 계정 : " + memberId;
+		} else {
+			info = "일반 계정 " + memberId;
+		}
+		return info;
 	}
-	
-	
-	
+
 }

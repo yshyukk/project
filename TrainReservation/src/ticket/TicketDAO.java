@@ -21,7 +21,7 @@ public class TicketDAO extends DAO {
 		return tDao;
 	}
 	
-	//isert(정보입력)
+	//insert(정보입력)
 	public void insert(Ticket ticket) {
 		try {
 			connect();
@@ -106,7 +106,37 @@ public class TicketDAO extends DAO {
 		return list;
 	}
 	
-public List<Ticket> searchTicket(int ticketId) {
+	public Ticket selectOne(int ticketId) {
+		Ticket ticket = null;
+		
+		try {
+			connect();
+			
+			String sql = "SELECT * FROM ticket WHERE ticket_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ticketId);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				ticket = new Ticket();
+				ticket.setTicketId(rs.getInt("ticket_id"));
+				ticket.setTimetableId(rs.getInt("timetable_id"));
+				ticket.setTrainSector(rs.getInt("train_sector"));
+				ticket.setSeatNum(rs.getInt("seat_num"));
+				ticket.setPrice(rs.getInt("price"));
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return ticket;
+	}
+	
+	
+	/*public List<Ticket> searchTicket(int ticketId) {
 		
 		List<Ticket> list = new ArrayList<>();
 		// 1. 티켓ID로 티켓정보확인
@@ -138,6 +168,6 @@ public List<Ticket> searchTicket(int ticketId) {
 			disconnect();
 		}
 		return list;
-	}
+	}*/
 	
 }
