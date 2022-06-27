@@ -35,8 +35,8 @@ public class TimeTableDAO extends DAO {
 
 			// pstmt.setInt(1, table.getTimeTableId());
 			pstmt.setInt(1, table.getTrainId());
-			pstmt.setDate(2, table.getDepartureTime());
-			pstmt.setDate(3, table.getArriveTime());
+			pstmt.setString(2, table.getDepartureTime());
+			pstmt.setString(3, table.getArriveTime());
 			pstmt.setString(4, table.getDepartureLocation());
 			pstmt.setString(5, table.getArriveLocation());
 
@@ -54,12 +54,12 @@ public class TimeTableDAO extends DAO {
 
 		try {
 			connect();
-			String sql = "UPDATE timetable set departure_time =?, arrive_time =? WHERE timetable_id = ?";
+			String sql = "UPDATE timetable set departure_time = TO_DATE(?,'YYYY-MM-DD hh24:mi'), arrive_time = TO_DATE(?,'YYYY-MM-DD hh24:mi') WHERE timetable_id = ?";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setDate(1, table.getDepartureTime());
-			pstmt.setDate(2, table.getArriveTime());
+			pstmt.setString(1, table.getDepartureTime());
+			pstmt.setString(2, table.getArriveTime());
 			pstmt.setInt(3, table.getTimeTableId());
 
 			int result = pstmt.executeUpdate();
@@ -107,8 +107,8 @@ public class TimeTableDAO extends DAO {
 
 				table.setTimeTableId(rs.getInt("timetable_id"));
 				table.setTrainId(rs.getInt("train_id"));
-				table.setDepartureTime(rs.getDate("departure_time"));
-				table.setArriveTime(rs.getDate("arrive_time"));
+				table.setDepartureTime(rs.getString("departure_time"));
+				table.setArriveTime(rs.getString("arrive_time"));
 				table.setDepartureLocation(rs.getString("departure_location"));
 				table.setArriveLocation(rs.getString("arrive_location"));
 
@@ -144,8 +144,8 @@ public class TimeTableDAO extends DAO {
 
 				ntable.setTimeTableId(rs.getInt("timetable_id"));
 				ntable.setTrainId(rs.getInt("train_id"));
-				ntable.setDepartureTime(rs.getDate("departure_time"));
-				ntable.setArriveTime(rs.getDate("arrive_time"));
+				ntable.setDepartureTime(rs.getString("departure_time"));
+				ntable.setArriveTime(rs.getString("arrive_time"));
 				ntable.setDepartureLocation(rs.getString("departure_location"));
 				ntable.setArriveLocation(rs.getString("arrive_location"));
 
@@ -167,10 +167,10 @@ public class TimeTableDAO extends DAO {
 
 		try {
 			connect();
-			String sql = "SELECT * FROM timetable WHERE departure_time >= ?";
+			String sql = "SELECT * FROM timetable WHERE departure_time >= TO_DATE(?,'YYYY-MM-DD hh24:mi')";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setDate(1, table.getDepartureTime());
+			pstmt.setString(1, table.getDepartureTime());
 			System.out.println(table.getDepartureTime());
 			rs = pstmt.executeQuery();
 
@@ -180,8 +180,8 @@ public class TimeTableDAO extends DAO {
 
 				ttable.setTimeTableId(rs.getInt("timetable_id"));
 				ttable.setTrainId(rs.getInt("train_id"));
-				ttable.setDepartureTime(rs.getDate("departure_time"));
-				ttable.setArriveTime(rs.getDate("arrive_time"));
+				ttable.setDepartureTime(rs.getString("departure_time"));
+				ttable.setArriveTime(rs.getString("arrive_time"));
 				ttable.setDepartureLocation(rs.getString("departure_location"));
 				ttable.setArriveLocation(rs.getString("arrive_location"));
 
@@ -210,8 +210,8 @@ public class TimeTableDAO extends DAO {
 			if (rs.next()) {
 				table.setTimeTableId(rs.getInt("timetable_id"));
 				table.setTrainId(rs.getInt("train_id"));
-				table.setDepartureTime(rs.getDate("departure_time"));
-				table.setArriveTime(rs.getDate("arrive_time"));
+				table.setDepartureTime(rs.getString("departure_time"));
+				table.setArriveTime(rs.getString("arrive_time"));
 				table.setDepartureLocation(rs.getString("departure_location"));
 				table.setArriveLocation(rs.getString("arrive_location"));
 

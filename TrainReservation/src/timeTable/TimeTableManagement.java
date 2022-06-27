@@ -28,15 +28,9 @@ public class TimeTableManagement {
 				insertInfo();
 			} else if (menuNo == 2 && role) {
 				// TIMETABLE 등록된 정보 수정
-				// updateTableInfo();
-			} else if (menuNo == 3) {
-				// 출발시간 이후 TABLE 정보조회
-				// searchTime();
-			} else if (menuNo == 4) {
-				// 출발지-도착지 입력하면 해당 TABLE 정보 조회
-				// searchLocation();
-			} else if (menuNo == 5 && role) {
-				// deleteTableInfo();
+				updateTableInfo();
+			} else if (menuNo == 3 && role) {
+				deleteTableInfo();
 			} else if (menuNo == 9) {
 				back();
 				break;
@@ -45,11 +39,9 @@ public class TimeTableManagement {
 	}
 
 	protected void menuPrint(boolean role) {
-		System.out.println(
-				"=================================================================================================");
-		System.out.println("1. 열차시간표 정보입력 | 2. 열차시간표 정보수정 | 3.열차조회(시간) | 4. 열차조회(출발-도착) | 5. 열차정보 삭제 | 9.종료");
-		System.out.println(
-				"=================================================================================================");
+		System.out.println("==============================================================");
+		System.out.println("1. 열차시간표 정보입력 | 2. 열차시간표 정보수정 | 4. 열차정보 삭제 | 9.종료");
+		System.out.println("==============================================================");
 
 	}
 
@@ -67,42 +59,21 @@ public class TimeTableManagement {
 		System.out.println("이전 메뉴로 돌아갑니다.");
 	}
 
-	// private Date convertDate(java.util.Date date) {
-	// return new java.sql.Date(date.getTime());
-	// }
-
 	// time table에 열차정보 입력
 	public void insertInfo() {
 		TimeTable insertTable = new TimeTable();
 		SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
-		// System.out.println("timetable_id > ");
-		// insertTable.setTimeTableId(Integer.parseInt(sc.nextLine()));
 		System.out.println("train_id > ");
 		insertTable.setTrainId(Integer.parseInt(sc.nextLine()));
 		System.out.println("yyyy-MM-dd HH:mm 형식으로 입력해주세요.");
 		System.out.println("departure_time > ");
-		// sc.nextLine[string타입 -> Date타입으로]
+		insertTable.setDepartureTime(sc.nextLine());
 
-		try {
-
-			java.util.Date date = dataFormat.parse(sc.nextLine());
-			insertTable.setDepartureTime(new java.sql.Date(date.getTime()));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
 		System.out.println("yyyy-MM-dd HH:mm 형식으로 입력해주세요.");
 		System.out.println("arrive_time > ");
-		try {
+		insertTable.setArriveTime(sc.nextLine());
 
-			java.util.Date date = dataFormat.parse(sc.nextLine());
-			insertTable.setArriveTime(new java.sql.Date(date.getTime()));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		System.out.println("departure_location > ");
 		insertTable.setDepartureLocation(sc.nextLine());
 		System.out.println("arrive_location > ");
@@ -113,6 +84,8 @@ public class TimeTableManagement {
 
 	public void updateTableInfo() {
 		// 열차시간표 정보수정 - 출발시간, 도착시간
+		// 출발-목적지에 해당하는 TABLE 정보 수정 출력
+		searchLocation();
 		// 바꾸고자 하는 table_id찾기
 		int tableId = inputTableId();
 		// 새로 초기화된 vo에 찾은 table_id입력
@@ -141,32 +114,19 @@ public class TimeTableManagement {
 
 		// dataformat을 입력 -> 내가 바꾸고자하는 날짜를 형식대로 입력->
 		SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		System.out.println("yyyy-MM-dd a(p) HH:mm 형식으로 입력해주세요.");
+		System.out.println("yyyy-MM-dd HH:mm 형식으로 입력해주세요.");
 		System.out.println("departure_time");
+		table.setDepartureTime(sc.nextLine());
 		// sc.nextLine[string타입 -> Date타입으로]
-		try {
 
-			java.util.Date date = dataFormat.parse(sc.nextLine());
-			table.setDepartureTime(convertDate(date));
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-
-		}
 		System.out.println("yyyy-MM-dd HH:mm 형식으로 입력해주세요.");
 		System.out.println("arrive_time");
-		try {
+		table.setArriveTime(sc.nextLine());
 
-			java.util.Date date = dataFormat.parse(sc.nextLine());
-			table.setArriveTime(convertDate(date));
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		return table;
 
 	}
-	
+
 	public Date convertDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
@@ -223,18 +183,9 @@ public class TimeTableManagement {
 		TimeTable ttable = new TimeTable();
 		System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
 		System.out.println("departure_time");
-		// sc.nextLine[string타입 -> Date타입으로]
-		try {
-			SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			java.util.Date date = dataFormat.parse(sc.nextLine());
-			ttable.setDepartureTime(new java.sql.Date(date.getTime()));
+		ttable.setDepartureTime(sc.nextLine());
+		tableDao.searchTimeInfo(ttable);
 
-			tableDao.searchTimeInfo(ttable);
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-
-		}
 	}
 
 }

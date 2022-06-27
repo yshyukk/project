@@ -14,8 +14,8 @@ public class TimeTable {
 	private int timeTableId;
 	private int trainId;
 	private String trainName;
-	private Date departureTime;
-	private Date arriveTime;
+	private String departureTime;
+	private String arriveTime;
 	private String departureLocation;
 	private String arriveLocation;
 

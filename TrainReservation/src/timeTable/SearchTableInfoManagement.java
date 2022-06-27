@@ -7,11 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
-
-public class SearchTableInfoManagement{
+public class SearchTableInfoManagement {
 	Scanner sc = new Scanner(System.in);
 	TimeTableDAO tableDao = TimeTableDAO.getInstance();
-	
+
 	public SearchTableInfoManagement() {
 		while (true) {
 			// 메뉴 출력
@@ -53,77 +52,57 @@ public class SearchTableInfoManagement{
 	protected void back() {
 		System.out.println("이전 메뉴로 돌아갑니다.");
 	}
-	
-	//STRING -> DATE로
-	private Date convertDate(java.util.Date date) {
-		return new java.sql.Date(date.getTime());
-	}
-	
+
 	protected void showInputError() {
 		System.out.println("메뉴에서 입력해주시기 바랍니다.");
 	}
-	//DATE -> STRING 
-	
-	
-	
+
 	// timetable조회
-		// 해당 출발지와 도착지 열차정보
-		private void searchLocation() {
-			// 출발지와 도착지 불러오기			
-			
-			List<TimeTable> locList = tableDao.searchLocationInfo(inputLocation());
-			
-			for(TimeTable locSearchtable : locList) {
-				System.out.println(locSearchtable);
-			}
+	// 해당 출발지와 도착지 열차정보
+	private void searchLocation() {
+		// 출발지와 도착지 불러오기
 
+		List<TimeTable> locList = tableDao.searchLocationInfo(inputLocation());
+
+		for (TimeTable locSearchtable : locList) {
+			System.out.println(locSearchtable);
 		}
+	}
+	// 출발지 도착지 입력
 
-		// 출발지 도착지 입력
+	private TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
+		TimeTable loctable = new TimeTable();
+		System.out.println("출발지를 입력해주세요!");
+		System.out.println("departure_location");
+		loctable.setDepartureLocation(sc.nextLine());
+		System.out.println("도착지를 입력해주세요!");
+		System.out.println("arrive_location");
+		loctable.setArriveLocation(sc.nextLine());
+		return loctable;
+	}
 
-		private TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
-			TimeTable loctable = new TimeTable();
-			System.out.println("departure_location");
-			loctable.setDepartureLocation(sc.nextLine());
-			System.out.println("arrive_location");
-			loctable.setArriveLocation(sc.nextLine());
-			return loctable;
-			
+	// 출발시간입력하면 그 시간보다 후에 시간 조회하기
+	// 원하는 출발시간 입력받고
+	// DAO에 넘겨줌
+	private void searchTime() {
+
+		searchLocation();
+		List<TimeTable> tList = tableDao.searchTimeInfo(inputTime());
+
+		System.out.println(tableDao.searchTimeInfo(inputTime()));
+		for (TimeTable timeTable : tList) {
+			System.out.println(timeTable);
 		}
+	}
 
-		// 출발시간입력하면 그 시간보다 후에 시간 조회하기
-		// 원하는 출발시간 입력받고
-		// DAO에 넘겨줌
-		private void searchTime() {
-			
-			List<TimeTable> tList = tableDao.searchTimeInfo(inputTime());
-			
-			System.out.println(tableDao.searchTimeInfo(inputTime()));
-			for(TimeTable timeTable : tList) {
-				System.out.println(timeTable);
-			}
-			
-			// sc.nextLine[string타입 -> Date타입으로]
-			
-		}
-		
-		private TimeTable inputTime() {
-			TimeTable tTable = new TimeTable();
-			System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
-			System.out.println("departure_time");
-			
-			try {
-				SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				java.util.Date date = dataFormat.parse(sc.nextLine());
-				
-				tTable.setDepartureTime(new java.sql.Date(date.getTime()));
+	private TimeTable inputTime() {
+		TimeTable tTable = new TimeTable();
+		System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
+		System.out.println("수정할 departure_time");
 
-			} catch (ParseException e) {
-				e.printStackTrace();
+		tTable.setDepartureTime(sc.nextLine());
+		System.out.println(tTable);
+		return tTable;
 
-			}
-			System.out.println(tTable);
-			return tTable;
-			
-		}
+	}
 }
