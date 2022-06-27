@@ -132,6 +132,9 @@ public class MemberDAO extends DAO {
 					loginInfo.setMemberId(rs.getString("member_id"));
 					loginInfo.setPassword(rs.getString("password"));
 					loginInfo.setMemberRole(rs.getInt("role"));
+					System.out.println(rs.getInt("role"));
+					System.out.println(loginInfo);
+					System.out.println(loginInfo.getMemberRole());
 				} else {
 					System.out.println("비밀번호가 일치하지 않습니다.");
 				}

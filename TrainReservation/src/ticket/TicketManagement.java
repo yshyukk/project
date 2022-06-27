@@ -2,10 +2,9 @@ package ticket;
 
 import java.util.Scanner;
 
-import common.Management;
 
 
-public class TicketManagement extends Management {
+public class TicketManagement {
 
 	Scanner sc = new Scanner(System.in);
 
@@ -91,7 +90,7 @@ public class TicketManagement extends Management {
 
 	
 
-	private void deleteTicket() {
+	public void deleteTicket() {
 
 	}
 }

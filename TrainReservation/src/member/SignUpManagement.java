@@ -2,11 +2,7 @@ package member;
 
 import java.util.Scanner;
 
-import javax.naming.ldap.ManageReferralControl;
-
-import common.Management;
-
-public class SignUpManagement extends Management{
+public class SignUpManagement{
 
 	Scanner sc = new Scanner(System.in);
 	

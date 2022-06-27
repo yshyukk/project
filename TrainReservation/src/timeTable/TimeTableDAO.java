@@ -1,7 +1,11 @@
 package timeTable;
 
 import java.sql.SQLException;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import common.DAO;
@@ -26,18 +30,18 @@ public class TimeTableDAO extends DAO {
 			connect();
 			String sql = "INSERT INTO timetable "
 					+ "( timetable_id , train_id, departure_time, arrive_time, departure_location, arrive_location) "
-					+ " VALUES (timetable_seq.NEXTVAL,?,?,?,?,?)";
+					+ " VALUES (timetable_seq.NEXTVAL,?,TO_DATE(?,'YYYY-MM-DD hh24:mi'),TO_DATE(?,'YYYY-MM-DD hh24:mi'),?,?)";
 			pstmt = conn.prepareStatement(sql);
 
-			//pstmt.setInt(1, table.getTimeTableId());
+			// pstmt.setInt(1, table.getTimeTableId());
 			pstmt.setInt(1, table.getTrainId());
 			pstmt.setDate(2, table.getDepartureTime());
 			pstmt.setDate(3, table.getArriveTime());
 			pstmt.setString(4, table.getDepartureLocation());
 			pstmt.setString(5, table.getArriveLocation());
-			
+
 			int result = pstmt.executeUpdate();
-		
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -47,7 +51,7 @@ public class TimeTableDAO extends DAO {
 
 	public void update(TimeTable table) {
 		// Timetable에 출발시간 도착시간 변경
-		
+
 		try {
 			connect();
 			String sql = "UPDATE timetable set departure_time =?, arrive_time =? WHERE timetable_id = ?";
@@ -77,7 +81,6 @@ public class TimeTableDAO extends DAO {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, table.getTimeTableId());
-			
 
 			int result = pstmt.executeUpdate();
 
@@ -86,7 +89,7 @@ public class TimeTableDAO extends DAO {
 		} finally {
 			disconnect();
 		}
-		
+
 	}
 
 	// 전체 TIMETABLE 조회
@@ -121,10 +124,9 @@ public class TimeTableDAO extends DAO {
 
 	// 조건별 조회
 	// -1. 출발지_도착지 입력시 해당하는 열차정보
-	public List<TimeTable> searchLocationInfo() {
+	public List<TimeTable> searchLocationInfo(TimeTable table) {
 
 		List<TimeTable> list = new ArrayList<>();
-		
 
 		try {
 			connect();
@@ -137,6 +139,7 @@ public class TimeTableDAO extends DAO {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
+
 				TimeTable ntable = new TimeTable();
 
 				ntable.setTimeTableId(rs.getInt("timetable_id"));
@@ -147,7 +150,6 @@ public class TimeTableDAO extends DAO {
 				ntable.setArriveLocation(rs.getString("arrive_location"));
 
 				list.add(ntable);
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -155,25 +157,25 @@ public class TimeTableDAO extends DAO {
 			disconnect();
 		}
 		return list;
+
 	}
 	// -2.출발시간 입력하고 그 이후시간 열차정보 검색
 
 	public List<TimeTable> searchTimeInfo(TimeTable table) {
 
 		List<TimeTable> list = new ArrayList<>();
-		
 
 		try {
 			connect();
-			String sql = "SELECT * FROM timetable WHERE dearture_time >= ?";
+			String sql = "SELECT * FROM timetable WHERE departure_time >= ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setDate(1, table.getDepartureTime());
-			
-
+			System.out.println(table.getDepartureTime());
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
+				
 				TimeTable ttable = new TimeTable();
 
 				ttable.setTimeTableId(rs.getInt("timetable_id"));
@@ -184,7 +186,7 @@ public class TimeTableDAO extends DAO {
 				ttable.setArriveLocation(rs.getString("arrive_location"));
 
 				list.add(ttable);
-
+				System.out.println(ttable);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -193,18 +195,19 @@ public class TimeTableDAO extends DAO {
 		}
 		return list;
 	}
-	//테이블id값으로 해당 정보 찾기
+
+	// 테이블id값으로 해당 정보 찾기
 	public TimeTable selectOne(int timeTableId) {
-		//TimeTable table = null;
+		// TimeTable table = null;
 		try {
 			connect();
 			String sql = "SELECT * FROM timetable WHERE timetable_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, timeTableId);
-			
+
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				table.setTimeTableId(rs.getInt("timetable_id"));
 				table.setTrainId(rs.getInt("train_id"));
 				table.setDepartureTime(rs.getDate("departure_time"));
@@ -213,13 +216,20 @@ public class TimeTableDAO extends DAO {
 				table.setArriveLocation(rs.getString("arrive_location"));
 
 			}
-			
-			
-		}catch(SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 		return table;
 	}
+
+	public static String convertStr(java.util.Date depTime) {
+		String dateTostr = depTime.toInstant().atOffset(ZoneOffset.UTC)
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH24:mm"));
+		System.out.println(dateTostr);
+		return dateTostr;
+	}
+
 }

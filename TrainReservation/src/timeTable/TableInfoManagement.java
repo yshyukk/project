@@ -1,13 +1,17 @@
 package timeTable;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Scanner;
 
-import common.Management;
 
-public class TableInfoManagement extends Management {
+public class TableInfoManagement {
+	
+	
+	Timestamp timestamp명 = new Timestamp(System.currentTimeMillis());
 
 	Scanner sc = new Scanner(System.in);
 
@@ -25,10 +29,10 @@ public class TableInfoManagement extends Management {
 				insertInfo();
 			} else if (menuNo == 2) {
 				// TIMETABLE 등록된 정보 수정
-				updateTableInfo();
+				//updateTableInfo();
 			} else if (menuNo == 3) {
 				// table에서 정보 삭제
-				deleteTableInfo();
+				//deleteTableInfo();
 			} else if (menuNo == 9) {
 				back();
 				break;
@@ -61,8 +65,11 @@ public class TableInfoManagement extends Management {
 		System.out.println("이전 메뉴로 돌아갑니다.");
 	}
 
-	private Date convertDate(java.util.Date date) {
+	public Date convertDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
+	}
+	protected void showInputError() {
+		System.out.println("메뉴에서 입력해주시기 바랍니다.");
 	}
 
 	// time table에 열차정보 입력
@@ -82,7 +89,7 @@ public class TableInfoManagement extends Management {
 			java.util.Date date = dataFormat.parse(sc.nextLine());
 			insertTable.setDepartureTime(new java.sql.Date(date.getTime()));
 
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
@@ -92,8 +99,8 @@ public class TableInfoManagement extends Management {
 
 			java.util.Date date = dataFormat.parse(sc.nextLine());
 			insertTable.setArriveTime(new java.sql.Date(date.getTime()));
-
-		} catch (ParseException e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("departure_location > ");
@@ -178,5 +185,6 @@ public class TableInfoManagement extends Management {
 			tableDao.delete(currentTable);
 		}
 
+	
 	}
 }

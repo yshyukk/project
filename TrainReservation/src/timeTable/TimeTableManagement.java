@@ -3,20 +3,20 @@ package timeTable;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
 import common.Management;
 
-public class TimeTableManagement extends TimeTable {
+public class TimeTableManagement {
 
 	Scanner sc = new Scanner(System.in);
-
 	TimeTableDAO tableDao = TimeTableDAO.getInstance();
 
 	public TimeTableManagement() {
 		boolean role = new Management().selectRole();
-		
+
 		while (true) {
 			// 메뉴 출력
 			menuPrint(role);
@@ -28,15 +28,15 @@ public class TimeTableManagement extends TimeTable {
 				insertInfo();
 			} else if (menuNo == 2 && role) {
 				// TIMETABLE 등록된 정보 수정
-				updateTableInfo();
+				// updateTableInfo();
 			} else if (menuNo == 3) {
 				// 출발시간 이후 TABLE 정보조회
-				searchTime();
+				// searchTime();
 			} else if (menuNo == 4) {
 				// 출발지-도착지 입력하면 해당 TABLE 정보 조회
-				searchLocation();
+				// searchLocation();
 			} else if (menuNo == 5 && role) {
-				deleteTableInfo();
+				// deleteTableInfo();
 			} else if (menuNo == 9) {
 				back();
 				break;
@@ -67,28 +67,29 @@ public class TimeTableManagement extends TimeTable {
 		System.out.println("이전 메뉴로 돌아갑니다.");
 	}
 
-	private Date convertDate(java.util.Date date) {
-		return new java.sql.Date(date.getTime());
-	}
+	// private Date convertDate(java.util.Date date) {
+	// return new java.sql.Date(date.getTime());
+	// }
 
 	// time table에 열차정보 입력
 	public void insertInfo() {
 		TimeTable insertTable = new TimeTable();
-		SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
-		//System.out.println("timetable_id > ");
-		//insertTable.setTimeTableId(Integer.parseInt(sc.nextLine()));
+		// System.out.println("timetable_id > ");
+		// insertTable.setTimeTableId(Integer.parseInt(sc.nextLine()));
 		System.out.println("train_id > ");
 		insertTable.setTrainId(Integer.parseInt(sc.nextLine()));
 		System.out.println("yyyy-MM-dd HH:mm 형식으로 입력해주세요.");
 		System.out.println("departure_time > ");
 		// sc.nextLine[string타입 -> Date타입으로]
+
 		try {
 
 			java.util.Date date = dataFormat.parse(sc.nextLine());
 			insertTable.setDepartureTime(new java.sql.Date(date.getTime()));
 
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
@@ -99,7 +100,7 @@ public class TimeTableManagement extends TimeTable {
 			java.util.Date date = dataFormat.parse(sc.nextLine());
 			insertTable.setArriveTime(new java.sql.Date(date.getTime()));
 
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("departure_location > ");
@@ -165,6 +166,10 @@ public class TimeTableManagement extends TimeTable {
 		return table;
 
 	}
+	
+	public Date convertDate(java.util.Date date) {
+		return new java.sql.Date(date.getTime());
+	}
 
 	// tableId 찾기
 	private int inputTableId() {
@@ -190,11 +195,10 @@ public class TimeTableManagement extends TimeTable {
 	// 해당 출발지와 도착지 열차정보
 	private void searchLocation() {
 		// 출발지와 도착지 불러오기
-		inputLocation();
-		
-		List<TimeTable> locList = tableDao.searchLocationInfo();
-		
-		for(TimeTable locSearchtable : locList) {
+
+		List<TimeTable> locList = tableDao.searchLocationInfo(inputLocation());
+
+		for (TimeTable locSearchtable : locList) {
 			System.out.println(locSearchtable);
 		}
 
@@ -202,13 +206,14 @@ public class TimeTableManagement extends TimeTable {
 
 	// 출발지 도착지 입력
 
-	private void inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
+	private TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
 		TimeTable loctable = new TimeTable();
 		System.out.println("departure_location");
 		loctable.setDepartureLocation(sc.nextLine());
 		System.out.println("arrive_location");
 		loctable.setArriveLocation(sc.nextLine());
-		
+
+		return loctable;
 	}
 
 	// 출발시간입력하면 그 시간보다 후에 시간 조회하기

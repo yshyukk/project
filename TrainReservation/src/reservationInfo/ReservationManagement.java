@@ -2,9 +2,8 @@ package reservationInfo;
 
 import java.util.Scanner;
 
-import common.Management;
 
-public class ReservationManagement extends Management{
+public class ReservationManagement{
 
 	Scanner sc = new Scanner(System.in);
 
@@ -18,12 +17,10 @@ public class ReservationManagement extends Management{
 			int menuNo = selectMenu();
 			// 각 기능별 실행
 			if (menuNo == 1) {
-				// 예약정보 등록
-				insertRes();
-					
+					//예약
 			} else if (menuNo == 2){
 				// 예약정보 조회
-				searchInfo();
+				
 			}else if ( menuNo == 9){
 				// exit();
 			}

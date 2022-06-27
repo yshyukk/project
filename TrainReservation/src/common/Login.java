@@ -68,9 +68,9 @@ public class Login {
 
 	private void login() {
 		// 아이디와 비밀번호 입력
-		Member inputinfo = inputMember();
+		Member inputInfo = inputMember();
 		// 로그인 시도
-		loginInfo = MemberDAO.getInstance().selectOne(inputinfo);
+		loginInfo = MemberDAO.getInstance().selectOne(inputInfo);
 
 		// 실패할 경우에는 그대로 메소드 종료
 		if (loginInfo == null)

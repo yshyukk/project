@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class Member {
 	private int memberRole;
 	private String memberId;
