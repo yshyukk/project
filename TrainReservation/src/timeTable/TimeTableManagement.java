@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Scanner;
 
 import common.Management;
+import ticket.Ticket;
+import ticket.TicketDAO;
 
 public class TimeTableManagement {
 
 	Scanner sc = new Scanner(System.in);
 	TimeTableDAO tableDao = TimeTableDAO.getInstance();
+	TicketDAO tDao = TicketDAO.getInstance();
 
 	public TimeTableManagement() {
 		boolean role = new Management().selectRole();
@@ -30,7 +33,11 @@ public class TimeTableManagement {
 				// TIMETABLE 등록된 정보 수정
 				updateTableInfo();
 			} else if (menuNo == 3 && role) {
+				// TIME TABLE 스케쥴 삭제
 				deleteTableInfo();
+			} else if (menuNo == 4) {
+				// TICKET 만들기
+				makeTicket();
 			} else if (menuNo == 9) {
 				back();
 				break;
@@ -39,9 +46,9 @@ public class TimeTableManagement {
 	}
 
 	protected void menuPrint(boolean role) {
-		System.out.println("==============================================================");
-		System.out.println("1. 열차시간표 정보입력 | 2. 열차시간표 정보수정 | 4. 열차정보 삭제 | 9.종료");
-		System.out.println("==============================================================");
+		System.out.println("==========================================================================");
+		System.out.println("1. 열차시간표 정보입력 | 2. 열차시간표 정보수정 | 3. 열차정보 삭제 | 4. 티켓정보 입력 | 9.종료");
+		System.out.println("==========================================================================");
 
 	}
 
@@ -155,7 +162,6 @@ public class TimeTableManagement {
 	// 해당 출발지와 도착지 열차정보
 	private void searchLocation() {
 		// 출발지와 도착지 불러오기
-
 		List<TimeTable> locList = tableDao.searchLocationInfo(inputLocation());
 
 		for (TimeTable locSearchtable : locList) {
@@ -185,6 +191,38 @@ public class TimeTableManagement {
 		System.out.println("departure_time");
 		ttable.setDepartureTime(sc.nextLine());
 		tableDao.searchTimeInfo(ttable);
+
+	}
+
+	private void makeTicket() {
+		// 출발지와 도착지를 입력하면 TIMETABLE 정보를 출력
+		System.out.println("출발지 > ");
+		TimeTable table = new TimeTable();
+		table.setDepartureLocation(sc.nextLine());
+		System.out.println("도착지 > ");
+		table.setArriveLocation(sc.nextLine());
+
+		List<TimeTable> locList = tableDao.searchLocationInfo(table);
+
+		for (TimeTable locSearchtable : locList) {
+			System.out.println(locSearchtable);
+		}
+
+		System.out.println("===================가격정보=====================");
+		System.out.println("|			      동대구 -> 서울				  |");
+		System.out.println("| KTX : 32,000 | ITX : 25,000 | 무궁화 : 10,000 |");
+		System.out.println("==============================================");
+		Ticket ticket = new Ticket();
+
+		System.out.println("Timetable_id> ");
+		ticket.setTimetableId(Integer.parseInt(sc.nextLine()));
+		System.out.println("KTX - 1,3 | SRT - 2,4 | 무궁화 - 5");
+		System.out.println("타는 곳 > ");
+		ticket.setTrainSector(Integer.parseInt(sc.nextLine()));
+		System.out.println("가격 > ");
+		ticket.setPrice(Integer.parseInt(sc.nextLine()));
+
+		tDao.insertTicketInfo(ticket);
 
 	}
 

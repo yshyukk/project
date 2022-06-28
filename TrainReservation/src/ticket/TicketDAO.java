@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.DAO;
-import member.Member;
 
 public class TicketDAO extends DAO {
 
@@ -20,20 +19,48 @@ public class TicketDAO extends DAO {
 		}
 		return tDao;
 	}
-	
-	//insert(정보입력)
-	public void insert(Ticket ticket) {
+
+	// 관리자가 티켓정보를 입력 (timetable , price, setNum반복)
+	public void insertTicketInfo(Ticket ticket) {
 		try {
 			connect();
-			String sql = "INSERT INTO ticket " + "(ticket_id, timetable_id, train_sector, seat_num, price ) " + " VALUES (?,?,?,?,?)";
+			String sql = "INSERT INTO ticket VALUES (ticket_seq.nextval, ?, ?, ?, ?, default)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, ticket.getTicketId());
+
+			pstmt.setInt(1, ticket.getTimetableId());
+			pstmt.setInt(2, ticket.getTrainSector());
+			pstmt.setInt(4, ticket.getPrice());
+			for (int j = 65; j <= 70; j++) {
+				for (int i = 1; i < 21; i++) {
+					pstmt.setString(3, (char) j + "" + i);
+					int result = pstmt.executeUpdate();
+
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnect();
+		}
+	}
+
+	// 예매! DB에 mamberId값만 넘겨주기
+	// 출발 -> 목적지를 입력하면 해당 타임테이블의 정보가 출력된다
+	// 내가 예매하고자하는 Timetable값을 입력하고 내 memberid를 입력한다.
+	// 정해진 가격과 일치하는 금액을 입력하는 price가격과 같으면 성공, 다르면 정확한 금액을 입력해주세요.
+	public void reservation(Ticket ticket) {
+
+		try {
+			connect();
+			String sql = "UPDATE ticket set member_id = ? WHERE timetable_id =? AND seat_num = ?";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, ticket.getMemberId());
 			pstmt.setInt(2, ticket.getTimetableId());
-			pstmt.setInt(3, ticket.getTrainSector());
-			pstmt.setInt(4, ticket.getSeatNum());
-			pstmt.setInt(5, ticket.getPrice());
-			
-			int result = pstmt.executeUpdate();
+			pstmt.setString(3, ticket.getSeatNum());
+
+			rs = pstmt.executeQuery();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -41,62 +68,67 @@ public class TicketDAO extends DAO {
 			disconnect();
 		}
 	}
-	public void Update(Ticket ticket) {
-		//좌석번호, 가격 변경
+
+	public List<Ticket> remainSeat(int timetableId) {
+		List<Ticket> list = new ArrayList<>();
 		try {
 			connect();
-			String sql = "UPDATE member set seat_num =?, price =? WHERE ticket_id =?";
+			String sql = "SELECT * FROM ticket WHERE member_id is null AND timetable_id =?";
+
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, ticket.getSeatNum());
-			pstmt.setInt(2, ticket.getPrice());
-			pstmt.setInt(3, ticket.getTicketId());
-			
-			int result = pstmt.executeUpdate();
+			pstmt.setInt(1, timetableId);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+
+				Ticket ticket = new Ticket();
+
+				ticket.setTicketId(rs.getInt("ticket_id"));
+				ticket.setTimetableId(rs.getInt("timetable_id"));
+				ticket.setTrainSector(rs.getInt("train_sector"));
+				ticket.setSeatNum(rs.getString("seat_num"));
+				ticket.setPrice(rs.getInt("price"));
+				ticket.setMemberId(rs.getString("member_id"));
+
+				list.add(ticket);
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+
 		} finally {
 			disconnect();
 		}
+		return list;
 	}
-	
-	public void delete(Ticket ticket) {
-		// 발권취소
-		try {
-			connect();
-			String sql = "DELETE ticket WHERE ticket_id =? ";
 
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setInt(1, ticket.getTicketId());;
-
-			int result = pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			disconnect();
-		}
-	}
-	// 에약된 티켓 전체 조회
-	public List<Ticket> selectAll() {
+	// 예매한 내 티켓정보 조회
+	// memberId비교해서 ticket정보 출력
+	public List<Ticket> searchMyTicket(String memberId) {
 		List<Ticket> list = new ArrayList<>();
 
 		try {
 			connect();
-			String sql = "SELECT * FROM ticket ORDER BY ticket_id";
+			String sql = "SELECT r.train_name, t.departure_location, t.arrive_location, t.departure_time, t.arrive_time, k.train_sector, k.seat_num, k.ticket_id"
+					+ " FROM timetable t JOIN train r" + " ON (t.train_id = r.train_id)" + " join ticket k"
+					+ " on(t.timetable_id = k.timetable_id)" + " WHERE k.member_id =  ? ";
 
-			stmt = conn.createStatement();
-			rs = pstmt.executeQuery(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberId);
+
+			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				Ticket ticket = new Ticket();
-				ticket.setTicketId(rs.getInt("ticket_id"));
-				ticket.setTimetableId(rs.getInt("timetable_id"));
-				ticket.setTrainSector(rs.getInt("train_sector"));
-				ticket.setSeatNum(rs.getInt("seat_num"));
-				ticket.setPrice(rs.getInt("price"));
-				
-				list.add(ticket);
+				Ticket tticket = new Ticket();
+
+				tticket.setTrainName(rs.getString("train_name"));
+				tticket.setDepartureLocation(rs.getString("departure_location"));
+				tticket.setArriveLocation(rs.getString("arrive_location"));
+				tticket.setDepartureTime(rs.getString("departure_time"));
+				tticket.setArriveTime(rs.getString("arrive_time"));
+				tticket.setTrainSector(rs.getInt("train_sector"));
+				tticket.setSeatNum(rs.getString("seat_num"));
+
+				list.add(tticket);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -105,69 +137,62 @@ public class TicketDAO extends DAO {
 		}
 		return list;
 	}
-	
-	public Ticket selectOne(int ticketId) {
-		Ticket ticket = null;
-		
+
+	public void delete(int ticketId) {
+		// 발권취소
 		try {
 			connect();
-			
-			String sql = "SELECT * FROM ticket WHERE ticket_id = ?";
+			String sql = "UPDATE ticket" + " set member_id = null" + " WHERE ticket_id =?";
+
 			pstmt = conn.prepareStatement(sql);
+
 			pstmt.setInt(1, ticketId);
-			
-			rs = pstmt.executeQuery();
-			
+			;
+
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println(ticketId + "가 취소되었습니다.");
+			} else {
+				System.out.println("ticketId를 확인해주세요.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			disconnect();
+		}
+	}
+
+	public Ticket selectOne(int ticketId) {
+		Ticket ticket = null;
+		try {
+			connect();
+			String sql = "SELECT * FROM ticket where ticket_id =" + ticketId;
+
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
 			if (rs.next()) {
 				ticket = new Ticket();
-				ticket.setTicketId(rs.getInt("ticket_id"));
+
+				ticket.setMemberId(rs.getString("member_id"));
+				ticket.setTicketId(rs.getInt("ticket_Id"));
 				ticket.setTimetableId(rs.getInt("timetable_id"));
+				ticket.setTrainName(rs.getString("train_name"));
 				ticket.setTrainSector(rs.getInt("train_sector"));
-				ticket.setSeatNum(rs.getInt("seat_num"));
+				ticket.setSeatNum(rs.getString("seat_num"));
 				ticket.setPrice(rs.getInt("price"));
+				ticket.setDepartureTime(rs.getString("departure_time"));
+				ticket.setArriveTime(rs.getString("arrive_time"));
+				ticket.setDepartureLocation(rs.getString("departure_location"));
+				ticket.setArriveLocation(rs.getString("arrive_location"));
+
 			}
-			
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 		return ticket;
 	}
-	
-	
-	/*public List<Ticket> searchTicket(int ticketId) {
-		
-		List<Ticket> list = new ArrayList<>();
-		// 1. 티켓ID로 티켓정보확인
-		
-		try {
-			connect();
-			String sql = "SELECT * FROM ticket WHERE ticket_id =?";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,ticketId);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				Ticket ticket = new Ticket();
-				
-				ticket.setTicketId(rs.getInt("ticket_id"));
-				ticket.setTimetableId(rs.getInt("timetable_id"));
-				ticket.setTrainSector(rs.getInt("train_sector"));
-				ticket.setSeatNum(rs.getInt("seat_num"));
-				ticket.setPrice(rs.getInt("price"));
-				
-				list.add(ticket);
-									
-			}
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}finally {
-			disconnect();
-		}
-		return list;
-	}*/
-	
+
 }

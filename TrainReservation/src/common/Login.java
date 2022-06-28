@@ -7,10 +7,10 @@ import member.MemberDAO;
 import member.SignUpManagement;
 
 public class Login {
-	
+
 	Scanner sc = new Scanner(System.in);
 	MemberDAO mDAO = MemberDAO.getInstance();
-	
+
 	// 로그인 정보를 저장하는
 	private static Member loginInfo = null;
 
@@ -31,20 +31,20 @@ public class Login {
 			} else if (menuNo == 2) {
 				// 회원가입
 				new SignUpManagement().signUp();
-			}else if (menuNo == 2) {
+			} else if (menuNo == 2) {
 				// 종료
-				exit(); 
-			}else {
+				exit();
+			} else {
 				showInputError();
 			}
 		}
 	}
 
 	private void menuPrint() {
-		System.out.println("==============================");
+		System.out.println("==========================");
 		System.out.println(" 1.로그인 | 2.회원가입 | 3.종료 ");
-		System.out.println("=============================");
-		
+		System.out.println("==========================");
+
 	}
 
 	private int menuSelect() {

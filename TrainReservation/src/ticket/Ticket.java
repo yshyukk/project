@@ -7,17 +7,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Ticket {
+	private String memberId;
 	private int ticketId;
 	private int timetableId;
+	private String trainName;
 	private int trainSector;
-	private int seatNum;
+	private String seatNum;
 	private int price;
+	private String departureTime;
+	private String arriveTime;
+	private String departureLocation;
+	private String arriveLocation;
+
 	@Override
 	public String toString() {
-		return "ticketId> " + ticketId + "timetableId> " + timetableId + "trainSector> " + trainSector
-				+ "seatNum> " + seatNum + "price> " + price;
+		return "||Ticket_id >" + ticketId + " | Timetable_id >" + timetableId + " | Train_Sector >" + trainSector
+				+ " || Seat_num >" + seatNum + " || price >" + price + "||";
 	}
-	
-	
-	
+
 }

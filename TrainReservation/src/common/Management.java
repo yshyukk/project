@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import member.MemberDAO;
 import member.SignUpManagement;
-import reservationInfo.ResDAO;
 import ticket.TicketDAO;
 import ticket.TicketManagement;
 import timeTable.SearchTableInfoManagement;
@@ -15,7 +14,6 @@ public class Management {
 //필드
 	protected Scanner sc = new Scanner(System.in);
 	protected MemberDAO mDao = MemberDAO.getInstance();
-	protected ResDAO rDao = ResDAO.getInstance();
 	protected TicketDAO tDao = TicketDAO.getInstance();
 	protected TimeTableDAO tableDao = TimeTableDAO.getInstance();
 
@@ -28,24 +26,18 @@ public class Management {
 			int menuNo = menuSelect();
 
 			if (menuNo == 1 && role) {
-				// 1. 테이블 관리
-				new TimeTableManagement();
-			} else if (menuNo == 2) {
-				// 2. 테이블 조회
+				// 1. 열차시간 조회
 				new SearchTableInfoManagement();
+			} else if (menuNo == 2) {
+				// 2. 회원정보 수정
+				new SignUpManagement();
 			} else if (menuNo == 3) {
-				// 3. 회원정보 수정
-				new SignUpManagement().updateMemberInfo();
+				// 3. 예매 및 티켓관리
+				new TicketManagement();
 			} else if (menuNo == 4) {
-				// 4. 티켓조회
-				new TicketManagement().oneTicketInfo();
-			} else if (menuNo == 5) {
-				// 6. 예매
-				new TicketManagement().reservationTicket();
-			} else if (menuNo == 6) {
-				// 6. 발권취소
-				new TicketManagement().deleteTicket();
-			}else if (menuNo == 9) {
+				// 5. TIMETABLE 관리 (관리자메뉴)
+				new TimeTableManagement();
+			} else if (menuNo == 9) {
 				// 뒤로가기
 				back();
 				break;
@@ -61,14 +53,16 @@ public class Management {
 
 		// 권한에 따라 메뉴를 구성
 		String menu = "";
-		if (role) {
-			menu += "1. TimeTable 관리 |";
-		}
-		menu += " 2. TimeTable 조회 |" + " 3. 회원정보 수정 |" + " 4. 발권조회 |" + " 5. 예매 및 티켓관리 |" + " 9.뒤로가기";
 
-		System.out.println("=======================================================================================");
+		menu += "|| 1. 열차시간 조회 |" + " 2. 회원정보 수정 |" + " 3. 티켓관리 |";
+		if (role) {
+			menu += " | 4. TimeTable 관리 ";
+		}
+		menu += "| 9.뒤로가기 ||";
+
+		System.out.println("==============================================================================");
 		System.out.println(menu);
-		System.out.println("=======================================================================================");
+		System.out.println("==============================================================================");
 	}
 
 	protected int menuSelect() {
@@ -93,10 +87,12 @@ public class Management {
 	public boolean selectRole() {
 		// 관리자일때만 role값이 true가 될겁니다.
 		int memberRole = Login.getLoginInfo().getMemberRole();
-		System.out.println("role" + memberRole);
+
 		if (memberRole == 0) {
+			System.out.println("관리자계정으로 로그인합니다.");
 			return true;
 		} else {
+			System.out.println("환영합니다!!!!!");
 			return false;
 		}
 

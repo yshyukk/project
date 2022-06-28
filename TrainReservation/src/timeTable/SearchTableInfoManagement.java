@@ -26,6 +26,7 @@ public class SearchTableInfoManagement {
 				searchLocation();
 			} else if (menuNo == 9) {
 				back();
+				break;
 			} else {
 				showInputError();
 			}
@@ -33,9 +34,9 @@ public class SearchTableInfoManagement {
 	}
 
 	private void menuPrint() {
-		System.out.println("============================================================");
+		System.out.println("===============================================");
 		System.out.println("1. 열차조회(시간) | 2. 열차조회 (출발-도착지) | 9.뒤로가기");
-		System.out.println("============================================================");
+		System.out.println("===============================================");
 
 	}
 
@@ -59,7 +60,7 @@ public class SearchTableInfoManagement {
 
 	// timetable조회
 	// 해당 출발지와 도착지 열차정보
-	private void searchLocation() {
+	public void searchLocation() {
 		// 출발지와 도착지 불러오기
 
 		List<TimeTable> locList = tableDao.searchLocationInfo(inputLocation());
@@ -70,7 +71,7 @@ public class SearchTableInfoManagement {
 	}
 	// 출발지 도착지 입력
 
-	private TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
+	public TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
 		TimeTable loctable = new TimeTable();
 		System.out.println("출발지를 입력해주세요!");
 		System.out.println("departure_location");
@@ -86,7 +87,7 @@ public class SearchTableInfoManagement {
 	// DAO에 넘겨줌
 	private void searchTime() {
 
-		searchLocation();
+		// searchLocation();
 		List<TimeTable> tList = tableDao.searchTimeInfo(inputTime());
 
 		System.out.println(tableDao.searchTimeInfo(inputTime()));
@@ -98,10 +99,10 @@ public class SearchTableInfoManagement {
 	private TimeTable inputTime() {
 		TimeTable tTable = new TimeTable();
 		System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
-		System.out.println("수정할 departure_time");
+		System.out.println("departure_time");
 
 		tTable.setDepartureTime(sc.nextLine());
-		System.out.println(tTable);
+
 		return tTable;
 
 	}

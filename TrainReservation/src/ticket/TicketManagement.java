@@ -1,14 +1,17 @@
 package ticket;
 
+import java.util.List;
 import java.util.Scanner;
 
-
+import timeTable.TimeTable;
+import timeTable.TimeTableDAO;
 
 public class TicketManagement {
 
 	Scanner sc = new Scanner(System.in);
 
 	TicketDAO tDao = TicketDAO.getInstance();
+	TimeTableDAO tableDao = TimeTableDAO.getInstance();
 
 	public TicketManagement() {
 		while (true) {
@@ -21,21 +24,22 @@ public class TicketManagement {
 				// 예매
 				reservationTicket();
 			} else if (menuNo == 2) {
-				// 예매한 티켓 조회
-				oneTicketInfo();
-			} else if (menuNo == 3) {
 				// 티켓취소
 				deleteTicket();
-			} else if (menuNo == 4) {
-				exit();
+			} else if (menuNo == 3) {
+				// 티켓조회
+				oneTicketInfo();
+			} else if (menuNo == 9) {
+				back();
+				break;
 			}
 		}
 	}
 
 	private void menuPrint() {
-		System.out.println("=====================================================");
-		System.out.println("1. 예매 | 2.예매한 티켓 확인 | 3. 예매취소 | 9.종료");
-		System.out.println("=====================================================");
+		System.out.println("=========================================");
+		System.out.println("1. 예매 | 2. 예매취소 | 3.예매한 티켓조회 | 9.종료");
+		System.out.println("=========================================");
 
 	}
 
@@ -49,48 +53,95 @@ public class TicketManagement {
 		return menu;
 	}
 
-	private void exit() {
-		System.out.println("프로그램을 종료합니다.");
+	private void back() {
+		System.out.println("이전 메뉴로 돌아갑니다.");
 	}
 
+	// 티켓 예약하기
 	public void reservationTicket() {
+
+		// 출발지와 도착지를 입력하면 TIMETABLE 정보를 출력
+		// MEBMER ID -> null값이 아니면 예약완료
+
+		// 출발, 도착지 결정
+		System.out.println("출발지 > ");
+		TimeTable table = new TimeTable();
+		table.setDepartureLocation(sc.nextLine());
+		System.out.println("도착지 > ");
+		table.setArriveLocation(sc.nextLine());
+
+		List<TimeTable> locList = tableDao.searchLocationInfo(table);
+
+		for (TimeTable locSearchtable : locList) {
+			System.out.println(locSearchtable);
+		}
+
+		//
+		System.out.println("===================가격정보===================");
+		System.out.println("|-----------	 동대구 -> 서울 -----------");
+		System.out.println("| KTX : 32,000 | ITX : 25,000 | 무궁화 : 10,000 |");
+		System.out.println("============================================");
 		Ticket ticket = new Ticket();
 
-		System.out.println("ticket_id> ");
-		ticket.setTicketId(Integer.parseInt(sc.nextLine()));
-		System.out.println("timetable_num> ");
-		ticket.setTicketId(Integer.parseInt(sc.nextLine()));
-		System.out.println("train_sector> ");
-		ticket.setTicketId(Integer.parseInt(sc.nextLine()));
-		System.out.println("seat_num> ");
-		ticket.setTicketId(Integer.parseInt(sc.nextLine()));
-		System.out.println("price> ");
-		ticket.setTicketId(Integer.parseInt(sc.nextLine()));
+		System.out.println("Member_Id > ");
+		ticket.setMemberId(sc.nextLine());
+		System.out.println("Timetable_id > ");
+		ticket.setTimetableId(Integer.parseInt(sc.nextLine()));
 
-		tDao.insert(ticket);
+		List<Ticket> list = tDao.remainSeat(ticket.getTimetableId());
+		System.out.println(ticket.getTimetableId());
+		if (list.size() == 0) {
+			System.out.println("매진");
+		}
+
+		for (Ticket aticket : list) {
+			System.out.println(aticket);
+		}
+
+		System.out.println("Seat_Num > ");
+		ticket.setSeatNum(sc.nextLine());
+		tDao.reservation(ticket);
+
+	}
+
+	public void seatStcok(int timetableId) {
+		System.out.println("좌석번호 형식은 호실(A~F), 좌석번호(1~20)까지 입니다.");
+		System.out.println("EX : A1, B20");
+		int tableId = Integer.parseInt(sc.nextLine());
 
 	}
 
 	public void oneTicketInfo() {
-		// 티켓_id로 티켓조회하기
-		int ticketId = inputTicketId();
+		// memberId로 티켓조회하기
+		System.out.print("이름 입력 : ");
+		String memberId = sc.nextLine();
+		List<Ticket> list = tDao.searchMyTicket(memberId);
 
-		Ticket ticket = tDao.selectOne(ticketId);
-
-		if (ticket == null) {
+		if (list.size() == 0) {
 			System.out.println("발권되지 않은 티켓정보입니다.");
+			return;
 		}
-		System.out.println(ticket);
-	}
-	
-	public int inputTicketId() {
-	System.out.println("Ticket_id > ");
-	return Integer.parseInt(sc.nextLine());
+		// 종료되지않았으면 있으니까
+		for (Ticket ticket : list) {
+			System.out.println(ticket);
+		}
+
+		System.out.println("취소할 티켓ID : ");
+		int ticketId = sc.nextInt();
+		tDao.delete(ticketId);
 	}
 
-	
+	public String inputMemberId() {
+		System.out.println("Member_id > ");
+		return sc.nextLine();
+	}
 
 	public void deleteTicket() {
+		System.out.println("티켓ID를 입력해주세요");
+		System.out.println("티켓 ID > ");
+		int ticketId = Integer.parseInt(sc.nextLine());
+
+		tDao.delete(ticketId);
 
 	}
 }

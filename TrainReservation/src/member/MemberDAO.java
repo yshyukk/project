@@ -1,6 +1,5 @@
 package member;
 
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,25 +44,21 @@ public class MemberDAO extends DAO {
 		// 비밀번호, 휴대폰번호 변경
 		try {
 			connect();
-			String sql = "UPDATE member SET password = ? ph_num =?"
-						+ " WHERE member_id =?";
-					
+			String sql = "UPDATE member SET password = ?, ph_num =?" + " WHERE member_id =?";
+
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getPassword());
 			pstmt.setInt(2, member.getPhnum());
 			pstmt.setString(3, member.getMemberId());
-			
+
 			int result = pstmt.executeUpdate();
-			
-		}catch(SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 	}
-	
-	
-	
 
 	public void delete(Member member) {
 		// 회원정보삭제
@@ -117,7 +112,6 @@ public class MemberDAO extends DAO {
 
 		Member loginInfo = null;
 		// 1. 회원가입 이력이 있는지
-
 		try {
 			connect();
 			String sql = "SELECT * FROM member WHERE member_id = '" + member.getMemberId() + "'";
@@ -131,10 +125,9 @@ public class MemberDAO extends DAO {
 					loginInfo = new Member();
 					loginInfo.setMemberId(rs.getString("member_id"));
 					loginInfo.setPassword(rs.getString("password"));
+					loginInfo.setName(rs.getString("name"));
 					loginInfo.setMemberRole(rs.getInt("role"));
-					System.out.println(rs.getInt("role"));
-					System.out.println(loginInfo);
-					System.out.println(loginInfo.getMemberRole());
+					loginInfo.setPhnum(rs.getInt("ph_num"));
 				} else {
 					System.out.println("비밀번호가 일치하지 않습니다.");
 				}
@@ -150,29 +143,29 @@ public class MemberDAO extends DAO {
 	}
 
 	public Member selectPw(String memberId) {
-		//memberId 입력 -> password 가져오기
-		
+		// memberId 입력 -> password 가져오기
 		Member member = null;
 		try {
 			connect();
-			
-			String sql = "SELECT password FROM member WHERE member_id = ?";
-		
+
+			String sql = "SELECT * FROM member WHERE member_id = ?";
+
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
-			
+
 			rs = pstmt.executeQuery();
-			
+
 			if (rs.next()) {
 				member = new Member();
-				
+
 				member.setPassword(rs.getString("password"));
-				
+				member.setPhnum(rs.getInt("ph_num"));
+				member.setMemberId(rs.getString("member_id"));
 			}
-			
-		}catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 		return member;

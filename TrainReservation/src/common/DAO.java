@@ -38,7 +38,6 @@ public class DAO {
 		} catch (SQLException e) {
 			System.out.println("DB 연결 실패");
 		}
-
 	}
 
 	private void dbConfig() {
@@ -56,7 +55,6 @@ public class DAO {
 		oracleUrl = properties.getProperty("url");
 		connectedId = properties.getProperty("id");
 		connectedPwd = properties.getProperty("password");
-
 	}
 
 	// DB해제 메서드

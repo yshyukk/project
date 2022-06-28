@@ -33,7 +33,6 @@ public class TimeTableDAO extends DAO {
 					+ " VALUES (timetable_seq.NEXTVAL,?,TO_DATE(?,'YYYY-MM-DD hh24:mi'),TO_DATE(?,'YYYY-MM-DD hh24:mi'),?,?)";
 			pstmt = conn.prepareStatement(sql);
 
-			// pstmt.setInt(1, table.getTimeTableId());
 			pstmt.setInt(1, table.getTrainId());
 			pstmt.setString(2, table.getDepartureTime());
 			pstmt.setString(3, table.getArriveTime());
@@ -51,7 +50,6 @@ public class TimeTableDAO extends DAO {
 
 	public void update(TimeTable table) {
 		// Timetable에 출발시간 도착시간 변경
-
 		try {
 			connect();
 			String sql = "UPDATE timetable set departure_time = TO_DATE(?,'YYYY-MM-DD hh24:mi'), arrive_time = TO_DATE(?,'YYYY-MM-DD hh24:mi') WHERE timetable_id = ?";
