@@ -19,10 +19,10 @@ public class SearchTableInfoManagement {
 			int menuNo = selectMenu();
 
 			if (menuNo == 1) {
-				// 출발시간 이후 TABLE 정보조회
+				// 출발-도착지-시간 입력
 				searchTimeTable();
 			} else if (menuNo == 2) {
-				// 출발지-도착지 입력하면 해당 TABLE 정보 조회
+				// 출발지-도착지 -열차이름 입력
 				searchNameTable();
 			} else if (menuNo == 9) {
 				back();
