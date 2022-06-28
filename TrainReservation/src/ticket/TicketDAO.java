@@ -83,7 +83,7 @@ public class TicketDAO extends DAO {
 
 				Ticket ticket = new Ticket();
 
-				ticket.setTicketId(rs.getInt("ticket_id"));
+				ticket.setTimetableId(rs.getInt("ticket_id"));
 				ticket.setTimetableId(rs.getInt("timetable_id"));
 				ticket.setTrainSector(rs.getInt("train_sector"));
 				ticket.setSeatNum(rs.getString("seat_num"));

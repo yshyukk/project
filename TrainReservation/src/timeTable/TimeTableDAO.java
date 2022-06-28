@@ -121,18 +121,25 @@ public class TimeTableDAO extends DAO {
 	}
 
 	// 조건별 조회
-	// -1. 출발지_도착지 입력시 해당하는 열차정보
+	// -1. 출발지_도착지_시간 입력시 해당하는 열차정보
 	public List<TimeTable> searchLocationInfo(TimeTable table) {
 
 		List<TimeTable> list = new ArrayList<>();
 
 		try {
 			connect();
-			String sql = "SELECT * FROM timetable WHERE departure_location= ? AND arrive_location = ?";
+			String sql = "SELECT t.timetable_id, n.train_name, t.departure_time, t.arrive_time, t.departure_location, t.arrive_location"
+					  + " FROM timetable t JOIN train n"
+					  + " ON t.train_id = n.train_id "
+					  + " WHERE departure_location= ? AND arrive_location = ? "
+					  + " AND departure_time >= TO_DATE(?,'YYYY-MM-DD hh24:mi')"
+					  + " ORDER BY departure_time";
+				
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, table.getDepartureLocation());
 			pstmt.setString(2, table.getArriveLocation());
+			pstmt.setString(3, table.getDepartureTime());
 
 			rs = pstmt.executeQuery();
 
@@ -141,7 +148,7 @@ public class TimeTableDAO extends DAO {
 				TimeTable ntable = new TimeTable();
 
 				ntable.setTimeTableId(rs.getInt("timetable_id"));
-				ntable.setTrainId(rs.getInt("train_id"));
+				ntable.setTrainName(rs.getString("train_name"));
 				ntable.setDepartureTime(rs.getString("departure_time"));
 				ntable.setArriveTime(rs.getString("arrive_time"));
 				ntable.setDepartureLocation(rs.getString("departure_location"));
@@ -157,7 +164,7 @@ public class TimeTableDAO extends DAO {
 		return list;
 
 	}
-	// -2.출발시간 입력하고 그 이후시간 열차정보 검색
+	// -2.출발지_도착지_열차이름 입력하고 그 이후시간 열차정보 검색
 
 	public List<TimeTable> searchTimeInfo(TimeTable table) {
 
@@ -165,11 +172,21 @@ public class TimeTableDAO extends DAO {
 
 		try {
 			connect();
-			String sql = "SELECT * FROM timetable WHERE departure_time >= TO_DATE(?,'YYYY-MM-DD hh24:mi')";
+			String sql = "SELECT t.timetable_id, n.train_name, t.departure_time, t.arrive_time, t.departure_location, t.arrive_location"
+					+ " FROM timetable t JOIN train n"
+					+ " ON t.train_id = n.train_id" 
+					+ " WHERE departure_location= ?"
+					+ " AND arrive_location = ?"
+					+ " AND train_name =?"
+					+ " AND departure_time >= TO_DATE(?,'YYYY-MM-DD hh24:mi')"
+					+ " ORDER BY departure_time";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, table.getDepartureTime());
-			System.out.println(table.getDepartureTime());
+			pstmt.setString(1, table.getDepartureLocation());
+			pstmt.setString(2, table.getArriveLocation());
+			pstmt.setString(3, table.getTrainName());
+			pstmt.setString(4, table.getDepartureTime());
+			
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -177,7 +194,7 @@ public class TimeTableDAO extends DAO {
 				TimeTable ttable = new TimeTable();
 
 				ttable.setTimeTableId(rs.getInt("timetable_id"));
-				ttable.setTrainId(rs.getInt("train_id"));
+				ttable.setTrainName(rs.getString("train_name"));
 				ttable.setDepartureTime(rs.getString("departure_time"));
 				ttable.setArriveTime(rs.getString("arrive_time"));
 				ttable.setDepartureLocation(rs.getString("departure_location"));

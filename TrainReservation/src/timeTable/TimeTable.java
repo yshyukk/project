@@ -21,7 +21,7 @@ public class TimeTable {
 
 	@Override
 	public String toString() {
-		return timeTableId + "| 열차번호 >" + trainId + " | 출발시간 >" + departureTime + " | 도착시간 >" + arriveTime + " | 출발지 >"
+		return timeTableId + "| 열차 >" + trainName + " | 출발시간 >" + departureTime + " | 도착시간 >" + arriveTime + " | 출발지 >"
 				+ departureLocation + " | 도착지 >" + arriveLocation;
 	}
 

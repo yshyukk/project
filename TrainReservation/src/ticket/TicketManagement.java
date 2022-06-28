@@ -69,6 +69,8 @@ public class TicketManagement {
 		table.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지 > ");
 		table.setArriveLocation(sc.nextLine());
+		System.out.println("출발시간 > ");
+		table.setDepartureTime(sc.nextLine());
 
 		List<TimeTable> locList = tableDao.searchLocationInfo(table);
 
