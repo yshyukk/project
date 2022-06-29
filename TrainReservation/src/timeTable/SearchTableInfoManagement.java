@@ -20,7 +20,7 @@ public class SearchTableInfoManagement {
 
 			if (menuNo == 1) {
 				// 출발-도착지-시간 입력
-				searchTimeTable();
+				searchTimeinput();
 			} else if (menuNo == 2) {
 				// 출발지-도착지 -열차이름 입력
 				searchNameTable();
@@ -34,9 +34,9 @@ public class SearchTableInfoManagement {
 	}
 
 	private void menuPrint() {
-		System.out.println("===============================================");
+		System.out.println("============================================");
 		System.out.println("1. 열차조회(시간) | 2. 열차조회 (열차이름) | 9.뒤로가기");
-		System.out.println("===============================================");
+		System.out.println("============================================");
 
 	}
 
@@ -70,36 +70,46 @@ public class SearchTableInfoManagement {
 		}
 	}
 	
-	public TimeTable inputLocation() { // VO값 입력값으로 변경 TimeTable locTable = new
+	public TimeTable inputLocation() { 
 		TimeTable loctable = new TimeTable();
 		System.out.println("출발지를 입력해주세요!");
-		System.out.println("departure_location");
+		System.out.println("출발지 > ");
 		loctable.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지를 입력해주세요!");
-		System.out.println("arrive_location");
+		System.out.println("도착지 >");
 		loctable.setArriveLocation(sc.nextLine());
 		return loctable;
 	}
-	// 출발지 도착지 시간입력
+	// 출발지 도착지 시간입력  해서 테이블 정보
+	public void searchTimeinput() {
+		
 
-	public TimeTable searchTimeTable() { // VO값 입력값으로 변경 TimeTable locTable = new
+		List<TimeTable> List = tableDao.searchLocationInfo(searchTimeTable());
+
+		for (TimeTable timetable : List) {
+			System.out.println(timetable);
+		}
+	}
+	
+	
+		 // 출발지와 도착지 불러오기
+	public TimeTable searchTimeTable() { 
 		TimeTable loctable = new TimeTable();
 		System.out.println("출발지를 입력해주세요!");
-		System.out.println("출발지 >>");
+		System.out.println("출발지 >");
 		loctable.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지를 입력해주세요!");
-		System.out.println("도착지 >>");
+		System.out.println("도착지 >");
 		loctable.setArriveLocation(sc.nextLine());
 		System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
 		System.out.println("출발시간을 입력해주세요!");
-		System.out.println("출발시간 >>");
+		System.out.println("출발시간 >");
 		loctable.setDepartureTime(sc.nextLine());
 		return loctable;
+		
 	}
 
-	// 출발시간입력하면 그 시간보다 후에 시간 조회하기
-	// 원하는 출발시간 입력받고
-	// DAO에 넘겨줌
+	
 	private void searchNameTable() {
 
 		// searchLocation();
@@ -114,19 +124,21 @@ public class SearchTableInfoManagement {
 	private TimeTable inputTrianName() {
 		TimeTable nTable = new TimeTable();
 		System.out.println("출발지를 입력해주세요!");
-		System.out.println("출발지 >>");
+		System.out.println("출발지 >");
 		nTable.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지를 입력해주세요!");
-		System.out.println("도착지 >>");
+		System.out.println("도착지 >");
 		nTable.setArriveLocation(sc.nextLine());
 		System.out.println("열차이름을 입력해주세요!");
-		System.out.println("열차이름 >>");
+		System.out.println("열차이름 >");
 		nTable.setTrainName(sc.nextLine());
 		System.out.println("yyyy-MM-dd HH:mm 입력해주세요.");
 		System.out.println("출발시간을 입력해주세요!");
-		System.out.println("출발시간 >>");
+		System.out.println("출발시간 >");
 		nTable.setDepartureTime(sc.nextLine());
 		return nTable;
+		
+		
 
 	}
 }

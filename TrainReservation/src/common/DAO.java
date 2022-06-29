@@ -12,18 +12,19 @@ import java.util.Properties;
 
 public class DAO {
 
-	private String jdbcDriver;
-	private String oracleUrl;
-	private String connectedId;
-	private String connectedPwd;
+	private String jdbcDriver = "oracle.jdbc.driver.OracleDriver";
+	private String oracleUrl= "jdbc:oracle:thin:@localhost:1521:xe";
+	private String connectedId = "ysh";
+	private String connectedPwd = "ysh";
 
 	protected Connection conn;
 	protected Statement stmt;
 	protected PreparedStatement pstmt;
 	protected ResultSet rs;
 
+	
 	public DAO() {
-		dbConfig();
+		//dbConfig();
 	}
 
 	public void connect() {
@@ -40,7 +41,7 @@ public class DAO {
 		}
 	}
 
-	private void dbConfig() {
+	/*private void dbConfig() {
 
 		String resource = "config/db.properties";
 		Properties properties = new Properties();
@@ -55,7 +56,8 @@ public class DAO {
 		oracleUrl = properties.getProperty("url");
 		connectedId = properties.getProperty("id");
 		connectedPwd = properties.getProperty("password");
-	}
+	}*/
+	
 
 	// DB해제 메서드
 	public void disconnect() {

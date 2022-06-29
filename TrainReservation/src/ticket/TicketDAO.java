@@ -47,7 +47,7 @@ public class TicketDAO extends DAO {
 	// 예매! DB에 mamberId값만 넘겨주기
 	// 출발 -> 목적지를 입력하면 해당 타임테이블의 정보가 출력된다
 	// 내가 예매하고자하는 Timetable값을 입력하고 내 memberid를 입력한다.
-	// 정해진 가격과 일치하는 금액을 입력하는 price가격과 같으면 성공, 다르면 정확한 금액을 입력해주세요.
+
 	public void reservation(Ticket ticket) {
 
 		try {
@@ -60,7 +60,7 @@ public class TicketDAO extends DAO {
 			pstmt.setInt(2, ticket.getTimetableId());
 			pstmt.setString(3, ticket.getSeatNum());
 
-			rs = pstmt.executeQuery();
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,7 +73,9 @@ public class TicketDAO extends DAO {
 		List<Ticket> list = new ArrayList<>();
 		try {
 			connect();
-			String sql = "SELECT * FROM ticket WHERE member_id is null AND timetable_id =?";
+			String sql = "SELECT  k.*, t.departure_time, t.arrive_time, t.departure_location, t.arrive_location"
+					+ " FROM ticket k JOIN timetable t" + " ON t.timetable_id = k.timetable_id"
+					+ " WHERE member_id is null AND t.timetable_id = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, timetableId);
@@ -83,7 +85,12 @@ public class TicketDAO extends DAO {
 
 				Ticket ticket = new Ticket();
 
-				ticket.setTimetableId(rs.getInt("ticket_id"));
+				ticket.setTicketId(rs.getInt("ticket_id"));
+
+				ticket.setDepartureLocation(rs.getString("departure_location"));
+				ticket.setArriveLocation(rs.getString("arrive_location"));
+				ticket.setDepartureTime(rs.getString("departure_time"));
+				ticket.setArriveTime(rs.getString("arrive_time"));
 				ticket.setTimetableId(rs.getInt("timetable_id"));
 				ticket.setTrainSector(rs.getInt("train_sector"));
 				ticket.setSeatNum(rs.getString("seat_num"));
@@ -120,6 +127,7 @@ public class TicketDAO extends DAO {
 			while (rs.next()) {
 				Ticket tticket = new Ticket();
 
+				tticket.setTicketId(rs.getInt("ticket_id"));
 				tticket.setTrainName(rs.getString("train_name"));
 				tticket.setDepartureLocation(rs.getString("departure_location"));
 				tticket.setArriveLocation(rs.getString("arrive_location"));

@@ -38,7 +38,7 @@ public class TicketManagement {
 
 	private void menuPrint() {
 		System.out.println("=========================================");
-		System.out.println("1. 예매 | 2. 예매취소 | 3.예매한 티켓조회 | 9.종료");
+		System.out.println("1. 예매 | 2. 예매취소 | 3.나의 티켓조회 | 9.종료");
 		System.out.println("=========================================");
 
 	}
@@ -64,8 +64,9 @@ public class TicketManagement {
 		// MEBMER ID -> null값이 아니면 예약완료
 
 		// 출발, 도착지 결정
-		System.out.println("출발지 > ");
 		TimeTable table = new TimeTable();
+
+		System.out.println("출발지 > ");
 		table.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지 > ");
 		table.setArriveLocation(sc.nextLine());
@@ -78,11 +79,12 @@ public class TicketManagement {
 			System.out.println(locSearchtable);
 		}
 
-		//
-		System.out.println("===================가격정보===================");
-		System.out.println("|-----------	 동대구 -> 서울 -----------");
-		System.out.println("| KTX : 32,000 | ITX : 25,000 | 무궁화 : 10,000 |");
-		System.out.println("============================================");
+		/*
+		 * System.out.println("===================가격정보=====================");
+		 * System.out.println("|<<<<<<<<<<<<<<<  동대구 -> 서울 >>>>>>>>>>>>>>>>");
+		 * System.out.println("| KTX : 32,000 | ITX : 25,000 | 무궁화 : 10,000 ");
+		 * System.out.println("==============================================");
+		 */
 		Ticket ticket = new Ticket();
 
 		System.out.println("Member_Id > ");
@@ -99,8 +101,8 @@ public class TicketManagement {
 		for (Ticket aticket : list) {
 			System.out.println(aticket);
 		}
-
-		System.out.println("Seat_Num > ");
+		System.out.println("좌석번호 형식은 호실(A~F), 좌석번호(1~20)까지 입니다.");
+		System.out.println("좌석번호 > ");
 		ticket.setSeatNum(sc.nextLine());
 		tDao.reservation(ticket);
 
@@ -115,7 +117,8 @@ public class TicketManagement {
 
 	public void oneTicketInfo() {
 		// memberId로 티켓조회하기
-		System.out.print("이름 입력 : ");
+		System.out.println("ID를 입력해주세요.");
+		System.out.print("ID > ");
 		String memberId = sc.nextLine();
 		List<Ticket> list = tDao.searchMyTicket(memberId);
 
@@ -128,18 +131,16 @@ public class TicketManagement {
 			System.out.println(ticket);
 		}
 
-		System.out.println("취소할 티켓ID : ");
-		int ticketId = sc.nextInt();
-		tDao.delete(ticketId);
 	}
 
 	public String inputMemberId() {
-		System.out.println("Member_id > ");
+		System.out.println("ID를 입력해주세요.");
+		System.out.println("ID > ");
 		return sc.nextLine();
 	}
 
 	public void deleteTicket() {
-		System.out.println("티켓ID를 입력해주세요");
+		System.out.println("티켓ID를 입력해주세요.");
 		System.out.println("티켓 ID > ");
 		int ticketId = Integer.parseInt(sc.nextLine());
 

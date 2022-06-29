@@ -25,9 +25,9 @@ public class SignUpManagement {
 	}
 
 	private void menuPrint() {
-		System.out.println("=========================");
-		System.out.println("1. 회원정보 수정 | 9.돌아가기");
-		System.out.println("=========================");
+		System.out.println("======================");
+		System.out.println("1. 회원정보수정 | 9.돌아가기");
+		System.out.println("======================");
 
 	}
 
@@ -43,25 +43,6 @@ public class SignUpManagement {
 
 	private void back() {
 		System.out.println("이전 메뉴로 돌아갑니다.");
-	}
-
-	// 회원가입 -- StockManagement 참조
-	public void signUp() {
-
-		Member member = new Member();
-		System.out.println("======::::: 회원가입 :::::======");
-
-		System.out.println("아이디 > ");
-		member.setMemberId(sc.nextLine());
-		System.out.println("비밀번호 > ");
-		member.setPassword(sc.nextLine());
-		System.out.println("이름 > ");
-		member.setName(sc.nextLine());
-		System.out.println("연락처 > ");
-		member.setPhnum(Integer.parseInt(sc.nextLine()));
-
-		mDAO.insert(member);
-
 	}
 
 	// 비밀번호, 폰번호 변경

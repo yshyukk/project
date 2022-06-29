@@ -30,7 +30,7 @@ public class Login {
 				login();
 			} else if (menuNo == 2) {
 				// 회원가입
-				new SignUpManagement().signUp();
+				signUp();
 			} else if (menuNo == 2) {
 				// 종료
 				exit();
@@ -41,9 +41,10 @@ public class Login {
 	}
 
 	private void menuPrint() {
-		System.out.println("==========================");
+		System.out.println("<<<< 동대구역에 오신것을 환영합니다!!! >>>>");
+		System.out.println("===========================");
 		System.out.println(" 1.로그인 | 2.회원가입 | 3.종료 ");
-		System.out.println("==========================");
+		System.out.println("===========================");
 
 	}
 
@@ -87,5 +88,24 @@ public class Login {
 		info.setPassword(sc.nextLine());
 		return info;
 	}
+	
+	public void signUp() {
+
+		Member member = new Member();
+		System.out.println("======::::: 회원가입 :::::======");
+
+		System.out.println("아이디 > ");
+		member.setMemberId(sc.nextLine());
+		System.out.println("비밀번호 > ");
+		member.setPassword(sc.nextLine());
+		System.out.println("이름 > ");
+		member.setName(sc.nextLine());
+		System.out.println("연락처 > ");
+		member.setPhnum(Integer.parseInt(sc.nextLine()));
+
+		mDAO.insert(member);
+
+	}
+
 
 }

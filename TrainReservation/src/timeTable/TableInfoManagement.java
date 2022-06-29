@@ -72,7 +72,7 @@ public class TableInfoManagement {
 	// time table에 열차정보 입력
 	public void insertInfo() {
 		TimeTable insertTable = new TimeTable();
-		SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		//SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		System.out.println("train_id > ");
 		insertTable.setTrainId(Integer.parseInt(sc.nextLine()));
