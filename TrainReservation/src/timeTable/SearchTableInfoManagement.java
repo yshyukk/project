@@ -90,8 +90,7 @@ public class SearchTableInfoManagement {
 			System.out.println(timetable);
 		}
 	}
-	
-	
+		
 		 // 출발지와 도착지 불러오기
 	public TimeTable searchTimeTable() { 
 		TimeTable loctable = new TimeTable();
@@ -108,7 +107,6 @@ public class SearchTableInfoManagement {
 		return loctable;
 		
 	}
-
 	
 	private void searchNameTable() {
 
@@ -136,9 +134,7 @@ public class SearchTableInfoManagement {
 		System.out.println("출발시간을 입력해주세요!");
 		System.out.println("출발시간 >");
 		nTable.setDepartureTime(sc.nextLine());
-		return nTable;
-		
-		
+		return nTable;		
 
 	}
 }

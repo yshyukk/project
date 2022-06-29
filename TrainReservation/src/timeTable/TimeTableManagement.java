@@ -139,7 +139,8 @@ public class TimeTableManagement {
 
 	// tableId 찾기
 	private int inputTableId() {
-		System.out.println("타임테이블 번호 > ");
+		System.out.println("해당 TIMETABLE_ID를 입력해주시기 바랍니다.");
+		System.out.println("TIMETABL_ID > ");
 		return Integer.parseInt(sc.nextLine());
 
 	}
@@ -208,8 +209,9 @@ public class TimeTableManagement {
 
 	private void makeTicket() {
 		// 출발지와 도착지를 입력하면 TIMETABLE 정보를 출력
-		System.out.println("출발지 > ");
 		TimeTable table = new TimeTable();
+		
+		System.out.println("출발지 > ");
 		table.setDepartureLocation(sc.nextLine());
 		System.out.println("도착지 > ");
 		table.setArriveLocation(sc.nextLine());
@@ -220,17 +222,18 @@ public class TimeTableManagement {
 			System.out.println(locSearchtable);
 		}
 
+		Ticket ticket = new Ticket();
+
+		System.out.println("TIMETABLE_ID > ");
+		ticket.setTimetableId(Integer.parseInt(sc.nextLine()));
+		System.out.println("타는 곳 정보");
+		System.out.println("KTX - 1,3 | SRT - 2,4 | 무궁화 - 5");
+		System.out.println("타는 곳 > ");
+		ticket.setTrainSector(Integer.parseInt(sc.nextLine()));
 		System.out.println("*==================가격정보==================================");
 		System.out.println("[ 동대구 -> 서울 ]  KTX> 32,000 | ITX> 25,000 | 무궁화> 10,000 ");
 		System.out.println("[ 동대구 -> 부산 ]  KTX> 15,000 | ITX> 10,000 | 무궁화> 5,000");
 		System.out.println("*=========================================================");
-		Ticket ticket = new Ticket();
-
-		System.out.println("타임테이블 번호 > ");
-		ticket.setTimetableId(Integer.parseInt(sc.nextLine()));
-		System.out.println("KTX - 1,3 | SRT - 2,4 | 무궁화 - 5");
-		System.out.println("타는 곳 > ");
-		ticket.setTrainSector(Integer.parseInt(sc.nextLine()));
 		System.out.println("가격 > ");
 		ticket.setPrice(Integer.parseInt(sc.nextLine()));
 

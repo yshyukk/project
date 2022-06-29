@@ -79,12 +79,6 @@ public class TicketManagement {
 			System.out.println(locSearchtable);
 		}
 
-		/*
-		 * System.out.println("===================가격정보=====================");
-		 * System.out.println("|<<<<<<<<<<<<<<<  동대구 -> 서울 >>>>>>>>>>>>>>>>");
-		 * System.out.println("| KTX : 32,000 | ITX : 25,000 | 무궁화 : 10,000 ");
-		 * System.out.println("==============================================");
-		 */
 		Ticket ticket = new Ticket();
 
 		System.out.println("Member_Id > ");
@@ -95,7 +89,7 @@ public class TicketManagement {
 		List<Ticket> list = tDao.remainSeat(ticket.getTimetableId());
 		System.out.println(ticket.getTimetableId());
 		if (list.size() == 0) {
-			System.out.println("매진");
+			System.out.println("해당열차는 매진입니다.");
 		}
 
 		for (Ticket aticket : list) {
